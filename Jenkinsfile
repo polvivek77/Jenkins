@@ -2,10 +2,38 @@ pipeline {
     agent any
 
     stages {
-        stage('Test') {
+
+        stage('Clone Code') {
             steps {
-                echo 'Hello Vivek'
+                git branch: 'main',
+                url: 'https://github.com/polvivek77/Jenkins.git'
             }
         }
+
+        stage('Setup Python') {
+            steps {
+                sh '''
+                python3 -m venv venv
+                . venv/bin/activate
+
+                pip install --upgrade pip
+                pip install -r requirements.txt
+                '''
+            }
+        }
+
+        stage('Deploy Streamlit') {
+            steps {
+                sh '''
+                pkill -f streamlit || true
+
+                nohup venv/bin/streamlit run app.py \
+                --server.address 0.0.0.0 \
+                --server.port 8501 \
+                > streamlit.log 2>&1 &
+                '''
+            }
+        }
+
     }
 }

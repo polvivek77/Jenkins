@@ -14,7 +14,6 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                cp -r . /var/lib/jenkins/workspace/Flask-app/
                 bash restart.sh
                 '''
             }

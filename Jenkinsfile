@@ -3,31 +3,25 @@ pipeline {
 
     stages {
 
-        stage('Clean Workspace') {
+        stage('Clean') {
             steps {
                 deleteDir()
             }
         }
 
-        stage('Checkout Code') {
+        stage('Checkout') {
             steps {
                 git branch: 'main',
                     url: 'https://github.com/polvivek77/Jenkins.git'
             }
         }
 
-        stage('Deploy Streamlit') {
+        stage('Deploy') {
             steps {
                 sh '''
+                mkdir -p /var/www/html
 
-                python3 -m venv venv
-
-                ./venv/bin/pip install -r requirements.txt
-
-                nohup ./venv/bin/streamlit run app.py \
-                --server.address 0.0.0.0 \
-                --server.port 8501 \
-                > streamlit.log 2>&1 &
+                cp index.html /var/www/html/index.html
                 '''
             }
         }

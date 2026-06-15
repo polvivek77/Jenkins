@@ -1,8 +1,10 @@
-import streamlit as st
+from flask import Flask
 
-st.title("Jenkins Demo")
+app = Flask(__name__)
 
-name = st.text_input("Enter your name")
+@app.route("/")
+def home():
+    return "Version 1"
 
-if st.button("Submit"):
-    st.success(f"Helloooooo {name}")
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)

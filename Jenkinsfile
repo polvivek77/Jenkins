@@ -14,8 +14,8 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                cp index.html /var/www/html/index.html
-                systemctl restart nginx
+                cp -r . /var/lib/jenkins/workspace/Flask-app/
+                bash restart.sh
                 '''
             }
         }

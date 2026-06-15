@@ -4,29 +4,26 @@ pipeline {
     stages {
 
         stage('Deploy') {
-            steps {
-                sh '''
-                echo "Python version:"
-                which python3
-                python3 -m pip show flask || true
+            stage('Deploy') {
+                steps {
+                    sh '''
+                    echo "Stopping old app..."
+                    PID=$(lsof -t -i:5000 || true)
+                    [ ! -z "$PID" ] && kill -9 $PID || true
 
-                echo "Stopping app..."
-                PID=$(lsof -t -i:5000 || true)
-                [ ! -z "$PID" ] && kill -9 $PID || true
+                    echo "Starting Flask using VENV python..."
 
-                echo "Starting Flask..."
+                    nohup /Jenkins/jenenv/bin/python app.py > app.log 2>&1 &
 
-                nohup python3 app.py > app.log 2>&1 &
+                    sleep 5
 
-                sleep 5
+                    echo "===== LOG ====="
+                    cat app.log || true
 
-                echo "---- LOG ----"
-                cat app.log || true
-
-                echo "---- PORT CHECK ----"
-                lsof -i:5000 || true
-                '''
+                    echo "===== PORT CHECK ====="
+                    lsof -i:5000 || true
+                    '''
+                }
             }
-        }
     }
 }

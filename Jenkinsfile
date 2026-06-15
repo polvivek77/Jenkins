@@ -6,21 +6,20 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                echo "Stopping app on port 5000..."
-
+                echo "Stopping app..."
                 PID=$(lsof -t -i:5000 || true)
+                [ ! -z "$PID" ] && kill -9 $PID || true
 
-                if [ ! -z "$PID" ]; then
-                    kill -9 $PID || true
-                fi
-
-                echo "Starting Flask app..."
+                echo "Starting app..."
 
                 nohup python3 app.py > app.log 2>&1 &
-                
-                sleep 3
+                sleep 5
 
-                lsof -i:5000 || echo "App failed to start"
+                echo "===== APP LOG ====="
+                cat app.log || true
+
+                echo "===== PORT CHECK ====="
+                lsof -i:5000 || true
                 '''
             }
         }

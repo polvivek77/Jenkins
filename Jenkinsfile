@@ -19,7 +19,6 @@ pipeline {
         stage('Deploy Streamlit') {
             steps {
                 sh '''
-                pkill -f streamlit || true
 
                 python3 -m venv venv
 

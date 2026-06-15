@@ -3,12 +3,6 @@ pipeline {
 
     stages {
 
-        stage('Clean') {
-            steps {
-                deleteDir()
-            }
-        }
-
         stage('Checkout') {
             steps {
                 git branch: 'main',
@@ -16,12 +10,14 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy Flask App') {
             steps {
                 sh '''
-                mkdir -p /var/www/html
+                echo "Stopping old Flask app if running..."
+                pkill -f app.py || true
 
-                cp index.html /var/www/html/index.html
+                echo "Starting new Flask app..."
+                nohup python3 app.py > app.log 2>&1 &
                 '''
             }
         }

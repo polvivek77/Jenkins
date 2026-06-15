@@ -11,11 +11,11 @@ pipeline {
             }
         }
 
-        stage('Deploy Flask App') {
+        stage('Deploy') {
             steps {
                 sh '''
-                sudo cp index.html /var/www/html/index.html
-                sudo systemctl restart nginx
+                cp index.html /var/www/html/index.html
+                systemctl restart nginx
                 '''
             }
         }

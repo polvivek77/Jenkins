@@ -14,13 +14,17 @@ pipeline {
         stage('Deploy Flask App') {
             steps {
                 sh '''
-                echo "Stopping old Flask app if running..."
+                echo "Stopping old Flask app..."
 
-                pkill -f "python3 app.py" || true
+                if [ -f app.pid ]; then
+                    kill $(cat app.pid) || true
+                    rm -f app.pid
+                fi
 
                 echo "Starting new Flask app..."
 
                 nohup python3 app.py > app.log 2>&1 &
+                echo $! > app.pid
                 '''
             }
         }

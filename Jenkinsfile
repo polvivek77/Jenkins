@@ -12,7 +12,7 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh '''
-                /var/lib/jenkins/workspace/Flask-app/jenenv/bin/pip install -r requirements.txt --quiet
+                /Jenkins/jenenv/bin/pip install -r requirements.txt --quiet
                 '''
             }
         }
@@ -26,12 +26,12 @@ pipeline {
                 sleep 2
 
                 echo "Starting Flask app..."
-                nohup /var/lib/jenkins/workspace/Flask-app/jenenv/bin/python app.py > app.log 2>&1 &
+                nohup /Jenkins/jenenv/bin/python /var/lib/jenkins/workspace/Flask-app/app.py > /var/lib/jenkins/workspace/Flask-app/app.log 2>&1 &
 
                 sleep 5
 
                 echo "===== LOG ====="
-                cat app.log || true
+                cat /var/lib/jenkins/workspace/Flask-app/app.log || true
 
                 echo "===== PORT CHECK ====="
                 lsof -i:5000 || true

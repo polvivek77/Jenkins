@@ -6,23 +6,24 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                set -e
+                echo "Python version:"
+                which python3
+                python3 -m pip show flask || true
 
-                echo "Stopping old app..."
+                echo "Stopping app..."
                 PID=$(lsof -t -i:5000 || true)
                 [ ! -z "$PID" ] && kill -9 $PID || true
 
                 echo "Starting Flask..."
-                cd $WORKSPACE
 
                 nohup python3 app.py > app.log 2>&1 &
 
                 sleep 5
 
-                echo "---- LOGS ----"
-                tail -50 app.log || true
+                echo "---- LOG ----"
+                cat app.log || true
 
-                echo "---- CHECK PORT ----"
+                echo "---- PORT CHECK ----"
                 lsof -i:5000 || true
                 '''
             }

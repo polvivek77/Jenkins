@@ -4,26 +4,26 @@ pipeline {
     stages {
 
         stage('Deploy') {
-            stage('Deploy') {
-                steps {
-                    sh '''
-                    echo "Stopping old app..."
-                    PID=$(lsof -t -i:5000 || true)
-                    [ ! -z "$PID" ] && kill -9 $PID || true
+            steps {
+                sh '''
+                echo "Stopping old app..."
 
-                    echo "Starting Flask using VENV python..."
+                PID=$(lsof -t -i:5000 || true)
+                [ ! -z "$PID" ] && kill -9 $PID || true
 
-                    nohup /Jenkins/jenenv/bin/python app.py > app.log 2>&1 &
+                echo "Starting Flask using VENV python..."
 
-                    sleep 5
+                nohup /Jenkins/jenenv/bin/python app.py > app.log 2>&1 &
 
-                    echo "===== LOG ====="
-                    cat app.log || true
+                sleep 5
 
-                    echo "===== PORT CHECK ====="
-                    lsof -i:5000 || true
-                    '''
-                }
+                echo "===== LOG ====="
+                cat app.log || true
+
+                echo "===== PORT CHECK ====="
+                lsof -i:5000 || true
+                '''
             }
+        }
     }
 }

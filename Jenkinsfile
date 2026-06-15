@@ -5,6 +5,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
+                deleteDir()
                 git branch: 'main',
                     url: 'https://github.com/polvivek77/Jenkins.git'
             }

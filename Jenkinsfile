@@ -26,7 +26,7 @@ pipeline {
                 sleep 2
 
                 echo "Starting Flask app..."
-                nohup /Jenkins/jenenv/bin/python /var/lib/jenkins/workspace/Flask-app/app.py > /var/lib/jenkins/workspace/Flask-app/app.log 2>&1 &
+                setsid nohup /Jenkins/jenenv/bin/python /var/lib/jenkins/workspace/Flask-app/app.py > /var/lib/jenkins/workspace/Flask-app/app.log 2>&1 < /dev/null &
 
                 sleep 5
 

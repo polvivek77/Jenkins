@@ -3,31 +3,14 @@ pipeline {
 
     stages {
 
-        stage('Update Code') {
+        stage('Deploy') {
             steps {
                 sh '''
-                cd /opt/streamlit-app
-
-                git reset --hard
-                git pull origin main
+                echo "Hello Jenkins"
+                pwd
+                ls -la
                 '''
             }
         }
-
-        stage('Restart Streamlit') {
-            steps {
-                sh '''
-                cd /opt/streamlit-app
-
-                pkill -f streamlit || true
-
-                nohup venv/bin/streamlit run app.py \
-                --server.address 0.0.0.0 \
-                --server.port 8501 \
-                > streamlit.log 2>&1 &
-                '''
-            }
-        }
-
     }
 }

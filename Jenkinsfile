@@ -3,28 +3,22 @@ pipeline {
 
     stages {
 
-        stage('Clone Code') {
-            steps {
-                git branch: 'main',
-                url: 'https://github.com/polvivek77/Jenkins.git'
-            }
-        }
-
-        stage('Setup Python') {
+        stage('Update Code') {
             steps {
                 sh '''
-                python3 -m venv venv
-                . venv/bin/activate
+                cd /opt/streamlit-app
 
-                pip install --upgrade pip
-                pip install -r requirements.txt
+                git reset --hard
+                git pull origin main
                 '''
             }
         }
 
-        stage('Deploy Streamlit') {
+        stage('Restart Streamlit') {
             steps {
                 sh '''
+                cd /opt/streamlit-app
+
                 pkill -f streamlit || true
 
                 nohup venv/bin/streamlit run app.py \

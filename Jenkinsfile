@@ -20,21 +20,10 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                echo "Stopping old app..."
-                PID=$(lsof -t -i:5000 || true)
-                [ ! -z "$PID" ] && kill -9 $PID || true
-                sleep 2
-
-                echo "Starting Flask app..."
-                setsid nohup /Jenkins/jenenv/bin/python /var/lib/jenkins/workspace/Flask-app/app.py > /var/lib/jenkins/workspace/Flask-app/app.log 2>&1 < /dev/null &
-
-                sleep 5
-
-                echo "===== LOG ====="
-                cat /var/lib/jenkins/workspace/Flask-app/app.log || true
-
-                echo "===== PORT CHECK ====="
-                lsof -i:5000 || true
+                echo "Restarting Flask service..."
+                sudo systemctl restart flask-app
+                sleep 3
+                sudo systemctl status flask-app
                 '''
             }
         }
